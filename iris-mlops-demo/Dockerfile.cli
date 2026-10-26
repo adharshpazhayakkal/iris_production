@@ -1,0 +1,19 @@
+# Dockerfile.cli  (Topic 1: package the model as a command-line tool)
+
+# 1. Start from an official image that already has Python installed
+FROM python:3.13-slim
+
+# 2. Work inside /app in the container
+WORKDIR /app
+
+# 3. Install libraries first (this layer is cached until requirements change)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 4. Copy our code and train the model inside the image
+COPY train.py predict.py ./
+RUN python train.py
+
+# 5. What runs when the container starts (default flower measurements as CMD)
+ENTRYPOINT ["python", "predict.py"]
+CMD ["5.1", "3.5", "1.4", "0.2"]
